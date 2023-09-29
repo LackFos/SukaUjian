@@ -79,4 +79,3 @@ class Connect:
         # Execute mysql script
         self.__execute(query, values)
         print("Data berhasil di hapus")
-

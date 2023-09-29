@@ -30,3 +30,4 @@ grade_1.__grade = False
 grade_1.cetakHasil()
 
 # Perubahan 2
+# Perubahan Fitur
