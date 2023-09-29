@@ -28,3 +28,5 @@ class grade:
 grade_1 = grade("Fariz", "MTK", 19)
 grade_1.__grade = False
 grade_1.cetakHasil()
+
+# Perubahan
