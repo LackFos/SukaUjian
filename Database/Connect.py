@@ -39,13 +39,25 @@ class Connect:
         except mysql.connector.Error as err:
             raise DatabaseConnectionError(err)
 
-    def get(self, table, columns=[]):
+    def select(self, table, columns=[]):
         # Setting up required data
         columnToSelect = ', '.join(columns) if columns else '*'
         query = f"SELECT {columnToSelect} FROM {table}"
 
         # Execute mysql script
         self.__cursor.execute(query)
+        result = self.__cursor.fetchall()
+        return result
+
+    def get(self, table, where, columns=[]):
+        # Setting up required data
+        columnToSelect = ', '.join(columns) if columns else '*'
+        target = ', '.join([f"{key} = %s" for key, value in where.items()])
+        values = list(where.values())
+        query = f"SELECT {columnToSelect} FROM {table} WHERE {target}"
+
+        # Execute mysql script
+        self.__cursor.execute(query, values)
         result = self.__cursor.fetchall()
         return result
 
