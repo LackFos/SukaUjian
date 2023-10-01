@@ -61,7 +61,7 @@ class Connect:
 
         # Execute mysql script
         self.__cursor.execute(query, values)
-        result = self.__cursor.fetchall()
+        result = self.__cursor.fetchone()
         return result
 
     def insert(self, table, data):
