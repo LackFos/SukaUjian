@@ -1,16 +1,11 @@
 from Database.Connect import Connect
 
-class grade:
+class Grade:
     def __init__(self):
-        self.db = Connect()
+        self.__db = Connect()
 
-    def cetakStatusKelulusan(self):
-        if(self.hasil > 80): 
-            print(self.mahasiswa, "lulus dalam matakuliah", self.mataKuliah)
-        else:
-            print(self.mahasiswa, "tidak lulus dalam matakuliah", self.mataKuliah)
-        
-    def cetakHasil(self):
-        print(self.mahasiswa, "medapatkan", self.grade, "dalam matakuliah", self.mataKuliah)
+    def insert(self, table, data):
+        self.__db.insert(table, data)
 
-grade_1 = grade()
+
+nilai = Grade()
