@@ -7,5 +7,8 @@ class Grade:
     def insert(self, table, data):
         self.__db.insert(table, data)
 
+    def delete(self, table, where):
+        self.__db.delete(table, where)
+
 
 nilai = Grade()
