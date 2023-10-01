@@ -1,10 +1,12 @@
 import os
+from Database.Connect import Connect
+
 os.system("cls")
+CONN = Connect()
 
 class Exam:
-    def __init__(self, name, timeLimit, subject):
-        self.__name = name
-        self.question = ["What's computer? Please describe it!", "What's components that include as Hardware and Software? Please give me 5 each!", "What do you know about operation system?"]
+    def __init__(self, timeLimit, subject):
+        self.question = []
         self._timeLimit = timeLimit
         self.__subject = subject
         self.answer = []
@@ -24,27 +26,44 @@ class Exam:
         finishExam = input("Finish exam? type 'y' to finish: ")
 
     # for only professor accessed
+class Dosen(Exam):
+    def __init__(self, name):
+        super().__init__("", "")
+        self.__name = name
+
     def score(self):
         for x in range(len(self.answer)):
             print(f"- {self.answer[x]}")
 
         score = int(input("Input score: "))
         return f"{self.__name}'s final score was {score}"
-
-
-compsci = Exam("Jeffrey", 1, "Introduction to Computer Science 😄")
-while compsci:
-    isReady = input("Ready start exam? type 'ready' to start! ")
-
-    if isReady:
-        print("------------------------------------------------------------")
-        compsci.showSubject()
-        compsci.start_exam()
-        compsci.submit_exam()
-    break
-print("You have finished your exams! Score will be announced in 3days. Goodluck!💪")
     
-print("Fill anything you want!")
-isProffesors = input("\nInput the message: ")
-if isProffesors == "TIMB":
-    print(compsci.score())
+    def input_question(self):
+        validation = input("Wanna input questions? ")
+
+        if validation:
+            isInputting = input("Input question: \n")
+            CONN.insert("soal", {"soal_ujian": isInputting})
+
+
+
+# dosen1 = Dosen("Jeffrey")
+# dosen1.input_question()
+CONN.select("soal")
+
+# compsci = Exam("Jeffrey", 1, "Introduction to Computer Science 😄")
+# while compsci:
+#     isReady = input("Ready start exam? type 'ready' to start! ")
+
+#     if isReady:
+#         print("------------------------------------------------------------")
+#         compsci.showSubject()
+#         compsci.start_exam()
+#         compsci.submit_exam()
+#     break
+# print("You have finished your exams! Score will be announced in 3days. Goodluck!💪")
+    
+# print("Fill anything you want!")
+# isProffesors = input("\nInput the message: ")
+# if isProffesors == "TIMB":
+#     print(compsci.score())
