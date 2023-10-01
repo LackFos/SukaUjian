@@ -38,7 +38,7 @@ class Connect:
         except mysql.connector.Error as err:
             raise DatabaseErrorException(err)
 
-    def close():
+    def close(self):
         self.__cursor.close()
         self.__mydb.close()
 
