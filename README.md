@@ -77,3 +77,9 @@ Connect.delete("user", {"id": "5"})
 ```
 
 > Ini akan menghapus rows dengan id `5` didalam table `user`
+
+### close
+
+`Connect.close()`
+
+> Method ini digunakkan untuk menutup koneksi database

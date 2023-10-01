@@ -39,6 +39,10 @@ class Connect:
         except mysql.connector.Error as err:
             raise DatabaseConnectionError(err)
 
+    def close():
+        self.__cursor.close()
+        self.__mydb.close()
+
     def select(self, table, columns=[]):
         # Setting up required data
         columnToSelect = ', '.join(columns) if columns else '*'
