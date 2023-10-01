@@ -10,5 +10,18 @@ class Grade:
     def delete(self, table, where):
         self.__db.delete(table, where)
 
+    def calculateGrade(self, score):
+        if score >= 80:
+            return "A"
+        elif score >= 60:
+            return "B"
+        elif score >= 40:
+            return "C"
+        elif score >= 20:
+            return "D"
+        else:
+            return "E"
+
+
 
 nilai = Grade()
