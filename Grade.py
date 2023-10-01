@@ -22,6 +22,15 @@ class Grade:
         else:
             return "E"
 
+    def printExamResult(self, npm):
+        fetchResult = self.__db.get("grade", {"npm": npm})
 
+        npm = fetchResult.get('npm')
+        course = fetchResult.get('course')
+        student = fetchResult.get('student')
+        score = fetchResult.get('score')
+        grading = self.calculateGrade(score)
+
+        print(f"{student} {npm}, mendapatkan nilai {score}({grading}) pada matakuliah {course}")
 
 nilai = Grade()
