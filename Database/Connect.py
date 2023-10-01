@@ -1,8 +1,7 @@
-import os
-import mysql.connector
+import os, importlib, mysql.connector
 from mysql.connector import errorcode
 from dotenv import load_dotenv
-from Exception import DatabaseConnectionError
+from Database.Error import DatabaseErrorException
 
 # Load enviroment variable dari file .env 
 load_dotenv()
@@ -28,16 +27,16 @@ class Connect:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 raise("Username atau password database salah")
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
-                raise DatabaseConnectionError(f"Database {os.getenv('DB_NAME')} tidak ada")
+                raise DatabaseErrorException(f"Database {os.getenv('DB_NAME')} tidak ada")
             else:
-                raise DatabaseConnectionError(err)
+                raise DatabaseErrorException(err)
 
     def __execute(self, query, values):
         try:
             self.__cursor.execute(query, values)
             self.__mydb.commit()
         except mysql.connector.Error as err:
-            raise DatabaseConnectionError(err)
+            raise DatabaseErrorException(err)
 
     def close():
         self.__cursor.close()
