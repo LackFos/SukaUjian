@@ -1,61 +1,3 @@
-#Kelompok 2 
-#2232069 Fariz Ajy Putra
-#2232025 Kevin
-#2232064 Wilsen Lau
-#2232067 Jeffrey
-#2232024 Vincent Tham
-#2232068 Elvis
-
-# class Dosen:
-#     def __init__(self, id, name, course,):
-#         self.id = id
-#         self.name = name
-#         self.course = course
-
-
-#     def enrollkelas(self):
-#         list = ("matematika","bahasa Inggirs")
-#         for i in range(len(list)):
-#             print(f"{i+1}. {list[i]} ")
-#         while True:
-#             x =input("Silakan masukan nomor kelas : ")
-#             if x == "1":
-#                 print("kamu telah dimasukan ke kelas Matematika(Dosen)")
-#                 break
-#             elif x == "2":
-#                 print("kamu telah dimasukan ke kelas Bahasa Inggris(Dosen)")
-#                 break
-#             else :
-#                 print("data yang kamu masukan salah silakan isi kembali")
-
-#     def inputnilai(self):
-#         list = ("matematika","bahasa Inggirs")
-#         for i in range(len(list)):
-#             print(f"{i+1}. {list[i]} ")
-#         while True:
-#             m=input("Nomor Mata Kuliah : ")
-#             if m == "1":
-#                 m="Matematika"
-#                 break
-#             elif m == "2":
-#                 m="Bahasa Inggris"
-#                 break
-#             else :
-#                 print("Data yang anda masukan salah silakan isi ulang")
-#         n=input("Nama Mahasiswa : ")
-#         ni=input("Nilai : ")
-#         print(f"Nama : {n}\t", f"MataKuliah : {m}\t", f"Nilai : {ni}\t")
-
-
-# Dosen1 = Dosen("1","Elvis","Bahasa Inggris")
-# Dosen2 = Dosen("2","Jeffey","Matematika")
-
-# print(Dosen1._name)
-# print(Dosen2.id)
-# print(Dosen2.course)
-
-# Dosen2.enrollkelas()
-# Dosen1.inputnilai()
 import os
 
 class Dosen:
@@ -66,11 +8,28 @@ class Dosen:
 
 
     def CreateExam(self):
-        x=self.course
-        print(f"Halo mr/ms {self._name} dengan mata kuliah {self.course}")
-        y=input("Silakan masukan tanggal Ujian(DD/MM/YYYY):")
-        with open(f'D:\Tugas\Latihan\OOP\Daftar Ujian.txt','a') as f:
-            f.write(f'{x} {y},')
+        try:
+            mydb = mysql.connector.connect(
+            user="root", 
+            password="",
+            host="127.0.0.1",
+            database="jadwal_ujian"
+            )
+            if mydb.is_connected():
+                print("Database Berhasil Terkonelsi")
+                print(f"Halo mr/ms {self._name} dengan mata kuliah {self.course}")
+                y=input("Silakan masukan tanggal Ujian(YYYY-MM-DD):")
+                x=input("Silakan masukan Jam Ujian(HH:MM-HH:MM):")
+                cursor = mydb.cursor()
+                sql = "INSERT INTO `waktu ujian` (`ID`, `Jam`, `Tanggal`, `MataKuliah`) VALUES (Null, %s,%s,%s);"
+                val = (f"{x}",f"{y}",f"{self.course}")
+                cursor.execute(sql, val)
+                mydb.commit()
+                print("Data Ditambahkan")
+
+        except:
+            print("Database Gagal Terkoneksi")
+
 
     def DisplayExam(self):
         print(f"Halo mr/ms {self._name} berikut daftar ujian" )
@@ -102,5 +61,3 @@ Dosen1 = Dosen("1","Elvis","Bahasa Inggris")
 Dosen2 = Dosen("2","Jeffey","Matematika")
 
 Dosen2.CreateExam()
-
-#Test Perubahan
