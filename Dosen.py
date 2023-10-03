@@ -1,4 +1,5 @@
 import os
+import mysql.connector
 
 class Dosen:
     def __init__(self, id, name, course):
@@ -16,7 +17,7 @@ class Dosen:
             database="jadwal_ujian"
             )
             if mydb.is_connected():
-                print("Database Berhasil Terkonelsi")
+                print("Database Berhasil Terkoneksi")
                 print(f"Halo mr/ms {self._name} dengan mata kuliah {self.course}")
                 y=input("Silakan masukan tanggal Ujian(YYYY-MM-DD):")
                 x=input("Silakan masukan Jam Ujian(HH:MM-HH:MM):")
@@ -32,14 +33,21 @@ class Dosen:
 
 
     def DisplayExam(self):
-        print(f"Halo mr/ms {self._name} berikut daftar ujian" )
-        with open(f'D:\Tugas\Latihan\OOP\Daftar Ujian.txt','r') as f:
-            a=f.read()
-        x=len(a)
-        y=a[:x-1]
-        list=y.split(",")
-        for i in range(len(list)):
-            print(f"{i+1}. {list[i]}")
+        mydb = mysql.connector.connect(
+        user="root", 
+        password="",
+        host="127.0.0.1",
+        database="jadwal_ujian"
+        )
+        if mydb.is_connected():
+            print("Database Berhasil Terkoneksi")
+        cursor = mydb.cursor()
+        sql = "SELECT * FROM `waktu ujian`"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+
+        for data in results:
+            print(data)
 
     def DeleteExam(self):
         while True :
@@ -60,4 +68,4 @@ class Dosen:
 Dosen1 = Dosen("1","Elvis","Bahasa Inggris")
 Dosen2 = Dosen("2","Jeffey","Matematika")
 
-Dosen2.CreateExam()
+Dosen2.DisplayExam()
