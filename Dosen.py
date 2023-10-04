@@ -22,8 +22,8 @@ class Dosen:
                 y=input("Silakan masukan tanggal Ujian(YYYY-MM-DD):")
                 x=input("Silakan masukan Jam Ujian(HH:MM-HH:MM):")
                 cursor = mydb.cursor()
-                sql = "INSERT INTO `waktu ujian` (`ID`, `Jam`, `Tanggal`, `MataKuliah`) VALUES (Null, %s,%s,%s);"
-                val = (f"{x}",f"{y}",f"{self.course}")
+                sql = "INSERT INTO `waktu ujian` (`ID`,`Nama Dosen`, `MataKuliah`, `Jam`, `Tanggal`) VALUES (Null,%s, %s,%s,%s);"
+                val = (f"{self._name}",f"{self.course}",f"{x}",f"{y}")
                 cursor.execute(sql, val)
                 mydb.commit()
                 print("Data Ditambahkan")
@@ -46,20 +46,34 @@ class Dosen:
         cursor.execute(sql)
         results = cursor.fetchall()
 
-        for data in results:
-            print(data)
+        for i in range(len(results)):
+            print(f"{i+1}. {results[i]}")
 
     def DeleteExam(self):
-        while True :
-            x=input(f"Halo mr/ms {self._name} apakah anda yakin untuk menghapus daftar ujian?(Y/N): ").upper()
-            if x == "Y":
-                os.remove(f'D:\Tugas\Latihan\OOP\Daftar Ujian.txt')
-                break
-            elif x == "N":
-                break
-            else:
-                print("Data eror silakan masukan data anda kembali")
-            
+        mydb = mysql.connector.connect(
+        user="root", 
+        password="",
+        host="127.0.0.1",
+        database="jadwal_ujian"
+        )
+        if mydb.is_connected():
+            print("Database Berhasil Terkoneksi")
+            cursor = mydb.cursor()
+            sql = "SELECT * FROM `waktu ujian`"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+
+            for i in range(len(results)):
+                print(f"{i+1}. {results[i]}")
+            x = input("Silakan Masukan ID yang ingin dihapus: ")
+            cursor = mydb.cursor()
+            sql = "DELETE FROM `waktu ujian` WHERE ID=%s;"
+            val = [f"{x}"]
+            cursor.execute(sql, val)
+            mydb.commit()
+            print("{} data dihapus".format(cursor.rowcount))
+
+
     def Showname(self):
         print(self.__id)
 
@@ -68,4 +82,5 @@ class Dosen:
 Dosen1 = Dosen("1","Elvis","Bahasa Inggris")
 Dosen2 = Dosen("2","Jeffey","Matematika")
 
-Dosen2.DisplayExam()
+Dosen1.DisplayExam()
+
