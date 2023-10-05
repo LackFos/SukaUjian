@@ -1,12 +1,15 @@
 import os
 import mysql.connector
+from Database.Connect import Connect
 
 class Dosen:
-    def __init__(self, id, name, course):
-        self.__id = id
-        self._name = name
-        self.course = course
+    def __init__(self):
+        self.db = Connect()
 
+
+    def login(self, id):
+        result = self.db.get('dosen', {"id": id})
+        self.nama = result.get('Name')
 
     def CreateExam(self):
         try:
@@ -79,8 +82,6 @@ class Dosen:
 
 
 
-Dosen1 = Dosen("1","Elvis","Bahasa Inggris")
-Dosen2 = Dosen("2","Jeffey","Matematika")
-
-Dosen1.DisplayExam()
-
+Dosen1 = Dosen()
+Dosen1.login(3)
+print(Dosen1.nama)
