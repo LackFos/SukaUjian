@@ -70,7 +70,8 @@ class Connect:
         placeholders = ', '.join(['%s'] * len(data)) 
         values = list(data.values())
         query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders})"
-
+        print(query)
+        print(values)
         # Execute mysql script
         self.__execute(query, values)
         print("Data berhasil di insert")
