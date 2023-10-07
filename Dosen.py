@@ -1,72 +1,56 @@
-
 import mysql.connector
 from Database.Connect import Connect
 
 class Dosen:
-    def __init__(self):
-        self.db =Connect()
+    def __init__(self,id):
+        self.db=Connect()
+        result=self.db.get('dosen', {"id": id})
+        self.id=result.get("ID")
+        self.name=result.get("Name")
+        self.courses=result.get("Courses")
 
-
-    def login(self, id):
-        result = self.db.get('dosen', {"id": id})
-        self.nama = result.get('Name')
-
-    def CreateExam(self,id):
-            result = self.db.get('dosen', {"id": id})
-            self.nama = result.get('Name')
-            self.course = result.get('Courses')
-            print(f"Halo mr/ms {self.nama} dengan mata kuliah {self.course}")
-            y=input("Silakan masukan tanggal Ujian(YYYY-MM-DD):")
-            x=input("Silakan masukan Jam Ujian(HH:MM-HH:MM):")
-            self.db.insert("ujian", {"ID":"Null", "Nama Dosen": f"{self.nama}","MataKuliah": f"{self.course}","Jam": f"{x}","Tanggal": f"{y}"})
-            self.db.__execute()
-
+    def ExamSchedule(self):
+        print(f"Halo MR/MRS {self.name}")
+        Date=input("Silakan masukan tanggal ujian(YYYY-MM-DD): ")
+        Time=input("Silakan masukan Waktu ujian(HH:MM-HH:MM): ")
+        self.db.insert(
+            'Ujian',
+            {"ID":"Null", 
+            "NamaDosen":f"{self.name}",
+            "MataKuliah":f"{self.courses}",
+            "Jam":f"{Time}",
+            "Tanggal":f"{Date}"}
+            )
+        
     def DisplayExam(self):
-        mydb = mysql.connector.connect(
-        user="root", 
-        password="",
-        host="127.0.0.1",
-        database="jadwal_ujian"
-        )
-        if mydb.is_connected():
-            print("Database Berhasil Terkoneksi")
-        cursor = mydb.cursor()
-        sql = "SELECT * FROM `waktu ujian`"
-        cursor.execute(sql)
-        results = cursor.fetchall()
+        x=self.db.select("ujian")
+        for i in range(len(x)):
+            print(f"{i+1}. {x[i]}")
 
-        for i in range(len(results)):
-            print(f"{i+1}. {results[i]}")
+    def UpdateExam(self):
+        self.DisplayExam()
+        print(f"Halo MR/MRS {self.name}, Silakan melakukan perubahan jadwal dimohon untuk tidak mengaganngu jadwal dosen lain")
+        x=input("Silakan masukan ID: ")
+        Date=input("Silakan masukan tanggal ujian(YYYY-MM-DD): ")
+        Time=input("Silakan masukan Waktu ujian(HH:MM-HH:MM): ")
+        self.db.update(
+            "ujian",
+            {"ID":f"{x}"},
+            {"Jam":f"{Time}",
+            "Tanggal":f"{Date}"}
+        )
 
     def DeleteExam(self):
-        mydb = mysql.connector.connect(
-        user="root", 
-        password="",
-        host="127.0.0.1",
-        database="jadwal_ujian"
-        )
-        if mydb.is_connected():
-            print("Database Berhasil Terkoneksi")
-            cursor = mydb.cursor()
-            sql = "SELECT * FROM `waktu ujian`"
-            cursor.execute(sql)
-            results = cursor.fetchall()
-
-            for i in range(len(results)):
-                print(f"{i+1}. {results[i]}")
-            x = input("Silakan Masukan ID yang ingin dihapus: ")
-            cursor = mydb.cursor()
-            sql = "DELETE FROM `waktu ujian` WHERE ID=%s;"
-            val = [f"{x}"]
-            cursor.execute(sql, val)
-            mydb.commit()
-            print("{} data dihapus".format(cursor.rowcount))
-
-
-    def Showname(self):
-        print(self.__id)
+        self.DisplayExam()
+        print(f"Halo MR/MRS {self.name}, Silakan melakukan penghapusan jadwal dimohon untuk tidak mengaganngu jadwal dosen lain")
+        x=input("Silakan masukan ID: ")
+        self.db.delete("ujian",{"ID":f"{x}"})
 
 
 
-Dosen1 = Dosen()
-Dosen1.CreateExam(3)
+
+
+
+
+dosen1=Dosen(2)
+dosen1.DeleteExam()
