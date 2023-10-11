@@ -4,7 +4,7 @@ from Database.Connect import Connect
 class Dosen:
     def __init__(self,id):
         self.db=Connect()
-        result=self.db.get('dosen', {"id": id})
+        result=self.db.get('dosen', {"ID": id})
         self.id=result.get("ID")
         self.name=result.get("Name")
         self.courses=result.get("Courses")
@@ -22,10 +22,13 @@ class Dosen:
             "Tanggal":f"{Date}"}
             )
         
+
+        
     def DisplayExam(self):
         x=self.db.select("ujian")
         for i in range(len(x)):
             print(f"{i+1}. {x[i]}")
+
 
     def UpdateExam(self):
         self.DisplayExam()
@@ -48,9 +51,8 @@ class Dosen:
 
 
 
-
-
-
-
-dosen1=Dosen(2)
+dosen1=Dosen(1)
+#dosen1.ExamSchedule()
+#dosen1.DisplayExam()
+#dosen1.UpdateExam()
 dosen1.DeleteExam()
