@@ -5,8 +5,7 @@ os.system("cls")
 CONN = Connect()
 
 class Exam:
-    def __init__(self, name, timeLimit, subject):
-        self.__name = name
+    def __init__(self, timeLimit, subject):
         self.question = []
         self._timeLimit = timeLimit
         self.__subject = subject
@@ -21,8 +20,8 @@ class Exam:
     def showSubject(self):
         print(f"Subject's Test was {self.__subject}")
 
-    def start_exam(self):
-        print(f"{self.__name}, You have {self._timeLimit} hour to do your exam!")
+    def start_exam(self, name):
+        print(f"{name}, You have {self._timeLimit} hour to do your exam!")
         x = 0
         for x in range(len(self.question)):
             print(f"\n{x+1}. {self.question[x]}")
@@ -34,9 +33,6 @@ class Exam:
 
     # for only professor accessed
 class Prof(Exam):
-    def __init__(self, name, timelimit, subject):
-        super().__init__(name, timelimit, subject)
-
     def score(self):
         for x in range(len(self.answer)):
             print(f"- {self.answer[x]}")
@@ -45,11 +41,14 @@ class Prof(Exam):
         return f"{self._Exam__name}'s final score was {score}"
     
     def input_question(self):
-        still_input = False
-        while not still_input:
-            if input("Input question? "):
+        still_input = True
+        while still_input:
+            isYes = input("Input question? ").lower()
+            if isYes == "y":
                 isInputting = input("Input question: \n")
                 CONN.insert("soal", {"soal_ujian": isInputting}) 
+            else:
+                still_input = False
                 # Expansion Auto Increment
 
     def view_current_question(self):
@@ -59,18 +58,21 @@ class Prof(Exam):
             question = data["soal_ujian"]
             print(f"{no}. {question}")
 
-compsci = Exam("Jeffrey", 1, "Introduction to Computer Science 😄")
+def running_program(name):
+    print("------------------------------------------------------------")
+    compsci.get_question()
+    compsci.showSubject()
+    compsci.start_exam(name)
+    compsci.submit_exam()
 
+compsci = Exam(1, "Introduction to Computer Science 😄")
 while compsci:
     status = input("Student or Prof? ").lower()
     if status == "student":
+        name = input("Input your name: ")
         isReady = input("Ready start exam? type 'ready' to start! ")
         if isReady:
-            print("------------------------------------------------------------")
-            compsci.get_question()
-            compsci.showSubject()
-            compsci.start_exam()
-            compsci.submit_exam()
+            running_program(name=name)
         print("You have finished your exams! 💪")
         compsci = False
 
@@ -86,7 +88,25 @@ while compsci:
                 prof.input_question()
             else: 
                 prof.view_current_question()
-        compsci = False
-    
+            compsci = False
     else:
         compsci = False
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Start exam
+# x = 0
+        # for x in range(len(self.question)):
+        #     print(f"\n{x+1}. {self.question[x]}")
+        #     answer = input("Answer: ")
+        #     CONN.__execute(f'CREATE TABLE `{name}` (nomor int, jawaban varchar(1000))', 1)
