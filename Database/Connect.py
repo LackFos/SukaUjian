@@ -89,8 +89,8 @@ class Connect:
 
     def update(self, table, where, data):
         # Setting up required data
-        columns = ', '.join([f"{key} = %s" for key, value in data.items()])
-        target = ' AND '.join([f"{key} = %s" for key, value in where.items()])
+        columns = ", ".join([f"{key} = %s" for key, value in data.items()])
+        target = " AND ".join([f"{key} = %s" for key, value in where.items()])
         values = list(data.values()) + list(where.values())
         query = f"UPDATE {table} SET {columns} WHERE {target}"
 
@@ -99,7 +99,7 @@ class Connect:
         print("Data berhasil di update")
 
     def delete(self, table, where):
-        target = ', '.join([f"{key} = %s" for key, value in where.items()])
+        target = " AND ".join([f"{key} = %s" for key, value in where.items()])
         values = list(where.values())
         query = f"DELETE FROM {table} WHERE {target}"
 
