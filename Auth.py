@@ -27,14 +27,17 @@ class Auth():
             print("Login Fail")
 
     def logout(self):
-        print("Apakah %s Mau Keluar?" % self.user)
-        keluar = input("1. Yes\n2. No\n")
-        if keluar == "1":
-            self.user = ""
-            self.__passw = ""
-            print("Berhasil Logout")
-        else:
-            print("Silahkan melanjutkan")
+        print("Tindakan yang %s bisa lakukan\n" % self.user)
+        tindakan = input("1.Logout\n2.Lanjut\n3.Delete akun\n")
+        match tindakan:
+            case "1":
+                self.user = ""
+                self.__passw = ""
+                print("Berhasil Logout")
+            case "2":
+                print("Silahkan melanjutkan")
+            case "3":
+                Conn.delete("pbo", {"Name": self.user})
 
 
 main = input(
@@ -55,7 +58,5 @@ match main:
         pert2 = input("Masukan Password Baru\n")
         Conn.update("pbo", {"Name": pert}, {"Password": pert2})
 
-
-#     # Conn.delete("user", {"Name": a})
 
 #     print("done")
