@@ -34,6 +34,20 @@ Connect.get("user", {"id": "1"}, ["id", "nama", "password"])
 
 > Ini Akan return semua rows column `id, name, dan password` dari table `user` yang cocok dengan kondisi `where`
 
+### first
+
+`Connect.first(table, where, column="*")`
+
+- table (string) : nama table yang digunakan
+- where (dictionary) : row dengan value yang cocok akan terdampak
+- column (array) : column yang ingin diselect (default value \*, jadi parameter ini dibiarkan kosong method ini akan return seluruh column yang ada)
+
+```
+Connect.get("user", {"id": "1"}, ["id", "nama", "password"])
+```
+
+> Ini Akan return satu rows column `id, name, dan password` dari table `user` yang cocok dengan kondisi `where`
+
 ### insert
 
 `Connect.insert(table, data)`
