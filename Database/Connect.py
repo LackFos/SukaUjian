@@ -111,3 +111,8 @@ class Connect:
         self.__cursor.execute(sql, values)
         result = self.__cursor.fetchall()
         return result
+
+    def rawOne(self, sql, values=[]): 
+        self.__cursor.execute(sql, values)
+        result = self.__cursor.fetchone()
+        return result
