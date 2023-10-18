@@ -3,13 +3,13 @@ from Database.Connect import Connect
 
 os.system("cls")
 CONN = Connect()
+ANSWER = []
 
 class Exam:
     def __init__(self, timeLimit, subject):
         self.question = []
         self._timeLimit = timeLimit
         self.__subject = subject
-        self.answer = []
 
     def get_question(self):
         list_question = CONN.select("soal")
@@ -26,19 +26,23 @@ class Exam:
         for x in range(len(self.question)):
             print(f"\n{x+1}. {self.question[x]}")
             answer = input("Answer: ")
-            self.answer.append(answer)
+            ANSWER.append(answer)
 
     def submit_exam(self):
         finishExam = input("Finish exam? type 'y' to finish: ")
+        print("Your final answer: ")
+        for x in range(len(ANSWER)):
+            print(f"{x+1}. {ANSWER[x]}")
+        
 
     # for only professor accessed
 class Prof(Exam):
-    def score(self):
-        for x in range(len(self.answer)):
-            print(f"- {self.answer[x]}")
+    def score(self, name):
+        for x in range(len(ANSWER)):
+            print(f"{x+1}. {ANSWER[x]}")
 
         score = int(input("Input score: "))
-        return f"{self._Exam__name}'s final score was {score}"
+        return f"{name}'s final score was {score}"
     
     def input_question(self):
         still_input = True
@@ -59,20 +63,21 @@ class Prof(Exam):
             print(f"{no}. {question}")
 
 def running_program(name):
-    print("------------------------------------------------------------")
+    print("-"*50)
     compsci.get_question()
     compsci.showSubject()
     compsci.start_exam(name)
     compsci.submit_exam()
 
+
+name_saved = "Jeffrey"
 compsci = Exam(1, "Introduction to Computer Science 😄")
 while compsci:
     status = input("Student or Prof? ").lower()
     if status == "student":
-        name = input("Input your name: ")
         isReady = input("Ready start exam? type 'ready' to start! ")
         if isReady:
-            running_program(name=name)
+            running_program(name=name_saved)
         print("You have finished your exams! 💪")
         compsci = False
 
@@ -80,10 +85,10 @@ while compsci:
         # in this case keyword to access prof is TIMB
         validateProf = input("Validate if you're a prof: ").upper()
         if validateProf == "TIMB":
-            prof = Prof("Jeffrey", 1, "Introduction to Computer Science 😄")
+            prof = Prof(1, "Introduction to Computer Science 😄")
             isDoing = input("Choose: \n - Score\n - Input questions\n - View questions\n --> ").lower()
             if isDoing == "score":
-                print(prof.score())
+                print(prof.score(name_saved))
             elif isDoing == "input questions":
                 prof.input_question()
             else: 
