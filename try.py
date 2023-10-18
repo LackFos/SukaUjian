@@ -1,4 +1,21 @@
-from Database.Connect import Connect
+import mysql.connector
+
+# Connect to the MySQL database
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="Izzul123", 
+    database="sukaujian"
+)
+
+if db.is_connected():
+    print("Berhasil terhubung ke database")
+
+cursor = db.cursor()
+sql = "SELECT * FROM kelas2"
+cursor.execute(sql)
+
+results = cursor.fetchall()
 
 class Kelas:
     def __init__(self, nomor, capacity, occupied):
@@ -42,6 +59,11 @@ class Kelas:
 
 kelas_list = []
 
-db = Connect()
-result= db.insert( "kelas2", {15, '329', 45, "False"})
-print(result)
+for data in results:
+    nomor, capacity, occupied = data[1], data[2], data[3]
+    kelas = Kelas(nomor, capacity, occupied)
+    kelas_list.append(kelas)
+
+for kelas in kelas_list:
+    kelas.pinjamKelas(30)
+    kelas.kembalikanKelas()
