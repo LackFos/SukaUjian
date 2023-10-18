@@ -1,16 +1,36 @@
 from Database.Connect import Connect
 
-class grade:
+class Grade:
     def __init__(self):
-        self.db = Connect()
+        self.__db = Connect()
 
-    def cetakStatusKelulusan(self):
-        if(self.hasil > 80): 
-            print(self.mahasiswa, "lulus dalam matakuliah", self.mataKuliah)
+    def insert(self, table, data):
+        self.__db.insert(table, data)
+
+    def delete(self, table, where):
+        self.__db.delete(table, where)
+
+    def calculateGrade(self, score):
+        if score >= 80:
+            return "A"
+        elif score >= 60:
+            return "B"
+        elif score >= 40:
+            return "C"
+        elif score >= 20:
+            return "D"
         else:
-            print(self.mahasiswa, "tidak lulus dalam matakuliah", self.mataKuliah)
-        
-    def cetakHasil(self):
-        print(self.mahasiswa, "medapatkan", self.grade, "dalam matakuliah", self.mataKuliah)
+            return "E"
 
-grade_1 = grade()
+    def printExamResult(self, npm):
+        fetchResult = self.__db.get("grade", {"npm": npm})
+
+        npm = fetchResult.get('npm')
+        course = fetchResult.get('course')
+        student = fetchResult.get('student')
+        score = fetchResult.get('score')
+        grading = self.calculateGrade(score)
+
+        print(f"{student} {npm}, mendapatkan nilai {score}({grading}) pada matakuliah {course}")
+
+nilai = Grade()
