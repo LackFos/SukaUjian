@@ -25,7 +25,7 @@ Connect.select("user", ["id", "name", "password"])
 `Connect.get(table, where, column="*")`
 
 - table (string) : nama table yang digunakan
-- where (dictionary) : row dengan value yang cocok akan terdampak
+- where (dictionary) : row dengan value yang cocok akan terdampak, jika where lebih dari satu kondisi otomatis akan menggunakan operator `AND`
 - column (array) : column yang ingin diselect (default value \*, jadi parameter ini dibiarkan kosong method ini akan return seluruh column yang ada)
 
 ```
@@ -33,6 +33,20 @@ Connect.get("user", {"id": "1"}, ["id", "nama", "password"])
 ```
 
 > Ini Akan return semua rows column `id, name, dan password` dari table `user` yang cocok dengan kondisi `where`
+
+### first
+
+`Connect.first(table, where, column="*")`
+
+- table (string) : nama table yang digunakan
+- where (dictionary) : row dengan value yang cocok akan terdampak, jika where lebih dari satu kondisi otomatis akan menggunakan operator `AND`
+- column (array) : column yang ingin diselect (default value \*, jadi parameter ini dibiarkan kosong method ini akan return seluruh column yang ada)
+
+```
+Connect.get("user", {"id": "1"}, ["id", "nama", "password"])
+```
+
+> Ini Akan return satu rows column `id, name, dan password` dari table `user` yang cocok dengan kondisi `where`
 
 ### insert
 
@@ -56,7 +70,7 @@ Connect.insert("user", {"nama": "Elvis", "password": "12345", "role": "mahasiswa
 `Connect.update(table, where, data)`
 
 - table (string) : nama table yang digunakan
-- where (dictionary) : row dengan value yang cocok akan terdampak
+- where (dictionary) : row dengan value yang cocok akan terdampak, jika where lebih dari satu kondisi otomatis akan menggunakan operator `AND`
 - data (dictionary) : data yang ingin diperbarui
 
 ```
@@ -70,10 +84,23 @@ Connect.update("user", {"id": "1"}, {"nama": "FarizKece"})
 `Connect.delete(table, where)`
 
 - table (string) : nama table yang digunakan
-- where (dictionary) : row dengan value yang cocok akan terdampak
+- where (dictionary) : row dengan value yang cocok akan terdampak, jika where lebih dari satu kondisi otomatis akan menggunakan operator `AND`
 
 ```
 Connect.delete("user", {"id": "5"})
+```
+
+> Ini akan menghapus rows dengan id `5` didalam table `user`
+
+### raw
+
+`Connect.raw(sql, values)`
+
+- sql (string) : raw sql query script
+- values (list) : list values untuk placeholder (optional)
+
+```
+Connect.raw("user", {"id": "5"})
 ```
 
 > Ini akan menghapus rows dengan id `5` didalam table `user`

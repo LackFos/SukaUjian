@@ -55,7 +55,7 @@ class Connect:
     def first(self, table, where, columns=[]):
         # Setting up required data
         columnToSelect = ', '.join(columns) if columns else '*'
-        target = ', '.join([f"{key} = %s" for key, value in where.items()])
+        target = " AND ".join([f"{key} = %s" for key, value in where.items()])
         values = list(where.values())
         query = f"SELECT {columnToSelect} FROM {table} WHERE {target}"
 
@@ -67,11 +67,11 @@ class Connect:
     def get(self, table, where, columns=[]):
         # Setting up required data
         columnToSelect = ', '.join(columns) if columns else '*'
-        target = ', '.join([f"{key} = %s" for key, value in where.items()])
+        target = " AND ".join([f"{key} = %s" for key, value in where.items()])
         values = list(where.values())
         query = f"SELECT {columnToSelect} FROM {table} WHERE {target}"
 
-        # Execute mysql script
+        # Execute mysql scripxt
         self.__cursor.execute(query, values)
         result = self.__cursor.fetchall()
         return result
@@ -90,7 +90,7 @@ class Connect:
     def update(self, table, where, data):
         # Setting up required data
         columns = ', '.join([f"{key} = %s" for key, value in data.items()])
-        target = ', '.join([f"{key} = %s" for key, value in where.items()])
+        target = ' AND '.join([f"{key} = %s" for key, value in where.items()])
         values = list(data.values()) + list(where.values())
         query = f"UPDATE {table} SET {columns} WHERE {target}"
 
@@ -106,3 +106,13 @@ class Connect:
         # Execute mysql script
         self.__execute(query, values)
         print("Data berhasil di hapus")
+
+    def raw(self, sql, values=[]): 
+        self.__cursor.execute(sql, values)
+        result = self.__cursor.fetchall()
+        return result
+
+    def rawOne(self, sql, values=[]): 
+        self.__cursor.execute(sql, values)
+        result = self.__cursor.fetchone()
+        return result
