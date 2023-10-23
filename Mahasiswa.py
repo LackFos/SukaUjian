@@ -1,31 +1,57 @@
+from test3 import MyDB
 
-class Mahasiswa: 
-    def __init__(self, npm, nama, matakuliah, jumlahsks):
+conn = MyDB()
+conn_db, cursor_db = conn.connect()
+
+class Mahasiswa:
+    def __init__(self, conn, cursor, npm, nama, matakuliah, jumlahsks):
+        self.conn = conn
+        self.cursor = cursor
         self.__nama = nama
         self.__npm = npm
         self.matakuliah = matakuliah
         self._jumlahsks = jumlahsks
-       
 
     def enroll_kelas(self):
-        return f"{self.__nama} dengan npm {self.__npm} sedang enroll matakuliah {self.matakuliah} dengan jumlah sks {self._jumlahsks} "
+        return f"{self.__nama} dengan npm {self.__npm} sedang enroll matakuliah {self.matakuliah} dengan jumlah sks {self._jumlahsks}"
 
     def take_exam(self):
         return f"{self.__nama} dengan npm {self.__npm} mengambil ujian {self.matakuliah}"
+    
+    def select_mahasiswa(self):
+        query = f"SELECT * FROM Mahasiswa WHERE npm = {self.__npm}"
+        self.cursor.execute(query)
+        result = self.cursor.fetchone()
+        if result:
+            return f"Mahasiswa {self.__nama} dengan npm {self.__npm} ditemukan dengan data: {result}"
+        else:
+            return f"Mahasiswa {self.__nama} dengan npm {self.__npm} tidak ditemukan."
 
-mahasiswa1 = Mahasiswa(2232025, "kevin", "Mandarin",3)
+    def insert_mahasiswa(self):
+        query = f"INSERT INTO Mahasiswa (nama, npm, matakuliah, jumlahsks) VALUES ('{self.__nama}', {self.__npm}, '{self.matakuliah}', {self._jumlahsks})"
+        self.cursor.execute(query)
+        self.conn.commit()
 
-print (mahasiswa1.enroll_kelas()) 
-print (mahasiswa1.take_exam())
+    def update_mahasiswa(self, jumlahsks):
+        query = f"UPDATE Mahasiswa SET jumlahsks = {jumlahsks} WHERE nama = '{self.__nama}'"
+        self.cursor.execute(query)
+        self.conn.commit()
 
-#class Child(Mahasiswa):  
-#    def __init__(self, npm, nama, takeexam, nilai):
-#        super().__init__(npm, nama, takeexam)
-#        self.nilai = nilai
 
-#mahasiswa2 = Child(2232024, "rick", "matematika", 80)
-#mahasiswa2.enroll_ujian() 
-#mahasiswa2.kumpul_ujian()
+    def delete_mahasiswa(self):
+        query = f"DELETE FROM Mahasiswa WHERE nama = '{self.__nama}'"
+        self.cursor.execute(query)
+        self.conn.commit()
 
-#print(mahasiswa2._takeexam)
+mahasiswa1 = Mahasiswa(conn=conn_db, cursor=cursor_db, npm=2232025, nama="kevin", matakuliah="Mandarin", jumlahsks=2)
 
+print(mahasiswa1.enroll_kelas())
+print(mahasiswa1.take_exam())
+
+result = mahasiswa1.select_mahasiswa()
+print(result)
+
+
+# mahasiswa1.insert_mahasiswa()
+# mahasiswa1.update_mahasiswa(jumlahsks=1)
+# mahasiswa1.delete_mahasiswa()
