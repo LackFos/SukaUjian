@@ -51,7 +51,7 @@ class Answer:
             elif choice == "3":
                 nama = input("Masukkan nama mahasiswa yang ingin diupdate: ")
                 nomor = int(input("Nomor mahasiswa: "))
-                pilihan = input("Jawaban baru: ") 
+                pilihan = input("Jawaban baru: ")
                 self.nama = nama
                 self.nomor = nomor 
                 self.jawaban = pilihan
