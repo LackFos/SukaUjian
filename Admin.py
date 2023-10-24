@@ -4,13 +4,14 @@ Conn = Connect()
 
 
 class Auth():
-    def __init__(self, user, passw):
-        self.user = user
-        self.passw = passw
+    def __init__(self, user, passw, npm):
+        self.__user = user
+        self.__passw = passw
+        self.__npm = npm
 
     def login(self):
-        user = Conn.first("pbo", {"Name": a})
-        passw = Conn.first("pbo", {"Password": b})
+        user = Conn.first("Admin", {"Name": a})
+        passw = Conn.first("Admin", {"Password": b})
         if user and passw is not None:
             print("Login Succses")
             return True
@@ -18,23 +19,27 @@ class Auth():
             print("Login Fail")
 
     def InputMahasiswaBaru(self):
-        Conn.insert("pbo", {"ID": None, "Name": self.user,
-                    "Password": self.passw})
+        Conn.insert("Admin", {"Name": self.__user,
+                    "Password": self.__passw, "NPM": self.__npm, "Status": "Mahasiswa"})
 
-    def DeleteMahasiswaLama(nama):
-        Conn.delete("pbo", {"Name": nama})
+    def InputDosenBaru(self, matakuliah):
+        Conn.insert("Admin", {"Name": self.__user,
+                    "Password": self.__passw, "NPM": self.__npm, "Status": "Dosen", "Matakuliah": matakuliah})
 
-    def UpdateMahasiswa(name, passw):
-        Conn.update("pbo", {"Name": name}, {"Password": passw})
+    def DeleteUser(npm):
+        Conn.delete("Admin", {"NPM": npm})
+
+    def UpdateMahasiswa(npm, passw):
+        Conn.update("Admin", {"NPM": npm}, {"Password": passw})
 
 
-a, b = ["Wilsen", "Test123"]
+a, b = ["WilsenAdmin", "Test123"]
 main = Auth(a, b)
 main.login()
 
-while (main.login):
+while (main.login()):
     a = input(
-        "Silahkan Pilih Aksi\n1. Input Mahasiswa Baru\n2. Delete Mahasiswa Lama\n3. Update update mahasiswa\n4. Quit\n")
+        "Silahkan Pilih Aksi\n1. Input Mahasiswa Baru\n2. Input Dosen Baru\n3. Delete Mahasiswa/Dosen Lama\n4. Update Data Mahasiswa/Dosen\n5. Quit\n")
     match a:
         case "1":
             loop = True
@@ -44,28 +49,41 @@ while (main.login):
                 c = Auth(a, b)
                 c.InputMahasiswaBaru()
                 d = input(
-                    "Apakah ingin memasukan mahasiswaw lain?\n1.Yes\n2.No\n")
+                    "Apakah ingin memasukan mahasiswa lain?\n1.Yes\n2.No\n")
                 if d == "2":
                     break
         case "2":
             loop = True
             while (loop):
-                a = input("Masukan nama mahasiswa yang ingin didelete\n")
-                Auth.DeleteMahasiswaLama(a)
+                a = input("Masukan Username\n")
+                b = input("Masukan Password\n")
+                d = input("Masukan Matakuliah")
+                c = Auth(a, b)
+                c.InputDosenBaru(d)
                 d = input(
-                    "Apakah ingin mendelete mahasiswaw lain?\n1.Yes\n2.No\n")
+                    "Apakah ingin memasukan dosen lain?\n1.Yes\n2.No\n")
                 if d == "2":
                     break
         case "3":
             loop = True
             while (loop):
-                a = input("Masukan nama mahasiswa yang ingin diu update\n")
-                b = input("Masukan password baru\n")
-                Auth.UpdateMahasiswa(a, b)
+                npm = input(
+                    "Masukan npm mahasiswa/dosen yang ingin didelete\n")
+                Auth.DeleteUser(a)
                 d = input(
-                    "Apakah ingin mendelete mahasiswaw lain?\n1.Yes\n2.No\n")
+                    "Apakah ingin mendelete mahasiswa lain?\n1.Yes\n2.No\n")
                 if d == "2":
                     break
         case "4":
+            loop = True
+            while (loop):
+                a = int(input("Masukan npm mahasiswa/dosen yang ingin diu update\n"))
+                b = input("Masukan password baru\n")
+                Auth.UpdateMahasiswa(a, b)
+                d = input(
+                    "Apakah ingin mendelete mahasiswa lain?\n1.Yes\n2.No\n")
+                if d == "2":
+                    break
+        case "5":
             print("Thank You")
             break
