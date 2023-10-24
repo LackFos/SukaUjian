@@ -25,7 +25,7 @@ class Answer:
             if choice == "1":
                 print("Pilih salah satu jawaban: a, b, c, atau d")
                 pilihan = input("Jawaban Anda: ")
-                nomor = int(input("Nomor mahasiswa: "))
+                nomor = int(input("Nomor Soal: "))
 
                 if pilihan in ['a', 'b', 'c', 'd']:
                     nama = input("Masukkan nama mahasiswa: ")
@@ -40,7 +40,7 @@ class Answer:
 
             elif choice == "2":
                 nama = input("Masukkan nama mahasiswa yang ingin dihapus: ")
-                nomor = input("Nomor mahasiswa: ")
+                nomor = input("Nomor Soal: ")
                 self.nama = nama
                 self.nomor = nomor
                 self._delete_jawaban()
@@ -48,7 +48,7 @@ class Answer:
 
             elif choice == "3":
                 nama = input("Masukkan nama mahasiswa yang ingin diupdate: ")
-                nomor = int(input("Nomor mahasiswa: "))
+                nomor = int(input("Nomor soal: "))
                 pilihan = input("Jawaban baru: ")
                 self.nama = nama
                 self.nomor = nomor 
