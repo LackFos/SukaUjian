@@ -8,8 +8,8 @@ load_dotenv()
 
 class Connect:
     def __init__(self):
-        __mydb = None
-        __cursor = None
+        self.__mydb = None
+        self.__cursor = None
 
         try:
             # Attempt to Connect Database
@@ -85,7 +85,7 @@ class Connect:
 
         # Execute mysql script
         self.__execute(query, values)
-        print("Data berhasil di insert")
+        return self.__cursor.lastrowid
 
     def update(self, table, where, data):
         # Setting up required data
@@ -96,7 +96,6 @@ class Connect:
 
         # Execute mysql script
         self.__execute(query, values)
-        print("Data berhasil di update")
 
     def delete(self, table, where):
         target = " AND ".join([f"{key} = %s" for key, value in where.items()])
@@ -105,7 +104,6 @@ class Connect:
 
         # Execute mysql script
         self.__execute(query, values)
-        print("Data berhasil di hapus")
 
     def raw(self, sql, values=[]): 
         self.__cursor.execute(sql, values)
