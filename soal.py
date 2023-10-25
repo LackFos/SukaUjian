@@ -18,7 +18,7 @@ class soal:
 
             elif opsiTerpilih == "2":
                 examId = self.__getExamId()
-                nomorSoal = self.__getNomorSoal(examId, ["nomor", "soal"])
+                nomorSoal = self.__getNomorSoal(examId)
                 opsiTerpilih = input("\n1. Edit Soal\n2. Edit Pilihan\nPilih opsi : ")
 
                 if opsiTerpilih == "1":
@@ -29,7 +29,7 @@ class soal:
                     self.__getPilihan(soalId)
                     
         
-            elif opsiTerpilih == "3":                
+            elif opsiTerpilih == "3": # Hapus soal           
                 examId = self.__getExamId()
                 nomorSoal = self.__getNomorSoal(examId)
                 self.hapusSoal(examId, nomorSoal)
@@ -39,14 +39,13 @@ class soal:
 
         else :
             examId = self.__getExamId()
-            listSoal = self.__db.get("soal", {"exam_id": examId})
-            soalId = ", ".join([str(item["id"]) for item in listSoal])
             
             query = f"""
                 SELECT soal, pilihan_1, pilihan_2, pilihan_3, pilihan_4 
                 FROM soal_jawaban 
                 INNER JOIN soal ON soal_jawaban.soal_id = soal.id 
-                WHERE soal.id IN ({soalId})"""
+                WHERE soal.exam_id IN ({examId})
+                ORDER BY RAND()"""
 
             result = self.__db.raw(query)
             
@@ -66,7 +65,8 @@ class soal:
     def tambahSoal(self, examId, soal):
         isFirstRow = self.__db.rawOne("SELECT MAX(nomor) as nomor_terakhir FROM soal")["nomor_terakhir"]
         nomorTerakhir = 1 if isFirstRow == None else isFirstRow + 1
-        return self.__db.insert("soal", {"exam_id": examId, "nomor": nomorTerakhir, "soal": soal})
+        self.__db.insert("soal", {"exam_id": examId, "nomor": nomorTerakhir, "soal": soal})
+        return nomorTerakhir
 
     def editSoal(self, examId, nomorSoal, soal):
         return self.__db.update("soal", {"exam_id": examId, "nomor": nomorSoal}, {"soal": soal})
@@ -78,8 +78,8 @@ class soal:
         print("\n1. Bahasa Indonesia\n2. Bahasa Inggris\n3. Bahasa Mandarin")
         return input("\nPilih sesi ujian : ")
 
-    def __getNomorSoal(self, examId, columns=[]):
-        listSoal = self.__db.get("soal", {"exam_id": examId}, columns) if columns else self.__db.get("soal", {"exam_id": examId})
+    def __getNomorSoal(self, examId):
+        listSoal = self.__db.get("soal", {"exam_id": examId}, ["nomor", "soal"])
         self.__printTable(listSoal)
         return input("\nMasukkan nomor soal : ")
 
