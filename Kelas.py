@@ -1,4 +1,10 @@
 from Database.Connect import Connect
+import os
+import mysql.connector
+from dotenv import load_dotenv
+from Database.Error import DatabaseErrorException
+
+load_dotenv()
 
 class Kelas:
     def __init__(self):
@@ -6,10 +12,24 @@ class Kelas:
         self.__capacity = 0
         self.__occupied = ""
 
-    def insert_to_database(self):
-        self.__nomor = input("Enter classroom number: ")
-        self.__capacity = int(input("Enter classroom capacity: "))
-        self.__occupied = input("Is the classroom occupied? (True/False): ")
+    def insert_kelas(self):
+        self.__nomor = input("Masukkan Nomer Kelas: ")
+        while True:
+            try:
+                self.__capacity = int(input("Masukkan Kapasiti Kelas (20-60): "))
+                if 20 <= self.__capacity <= 60:
+                    break
+                else:
+                    print("Kapasiti harus antara 20 dan 60.")
+            except ValueError:
+                print("Masukkan nomer antara 20 dan 60.")
+
+        while True:
+            self.__occupied = input("Adakah Kelas ini sudah dipakai? (True/False): ")
+            if self.__occupied.lower() in ["true", "false"]:
+                break
+            else:
+                print("Masukkan 'True' atau 'False'.")
 
         db = Connect()
         data = {
@@ -19,19 +39,37 @@ class Kelas:
         }
         db.insert("kelas", data)
 
-    def update_in_database(self):
-        self.__nomor = input("Enter classroom number to update: ")
-        
-        # Check if the classroom exists in the database
-        if not self.classroom_exists():
-            print(f"There is no classroom with number '{self.__nomor}' in the database.")
-            return
-
-        new_nomor = input("Enter new classroom number: ")
-        new_capacity = int(input("Enter new classroom capacity: "))
-        new_occupied = input("Is the classroom newly occupied? (True/False): ")
+    def update_kelas(self):
+        self.__nomor = input("Masukkan Nomer Kelas yang ingin diperbarui: ")
 
         db = Connect()
+        criteria = {"NomerKelas": self.__nomor}
+        existing_data = db.get("kelas", criteria)
+
+        if not existing_data:
+            print("Nomer Kelas tidak ditemukan dalam database.")
+            return
+
+        existing_data = existing_data[0]  # Assuming it's a list, and we take the first item
+
+        new_nomor = input("Masukkan Nomer Kelas Baru: ")
+        while True:
+            try:
+                new_capacity = int(input("Masukkan Kapasiti Kelas Baru (20-60): "))
+                if 20 <= new_capacity <= 60:
+                    break
+                else:
+                    print("Kapasiti harus antara 20 dan 60.")
+            except ValueError:
+                print("Masukkan nomer antara 20 dan 60.")
+
+        while True:
+            new_occupied = input("Adakah Kelas ini sudah dipakai yang baru? (True/False): ")
+            if new_occupied.lower() in ["true", "false"]:
+                break
+            else:
+                print("Masukkan 'True' atau 'False'.")
+
         criteria = {"NomerKelas": self.__nomor}
         new_data = {
             "NomerKelas": new_nomor,
@@ -40,26 +78,21 @@ class Kelas:
         }
         db.update("kelas", criteria, new_data)
 
-    def delete_from_database(self):
-        self.__nomor = input("Enter classroom number to delete: ")
-
-        # Check if the classroom exists in the database
-        if not self.classroom_exists():
-            print(f"There is no classroom with number '{self.__nomor}' in the database.")
-            return
+    def delete_kelas(self):
+        self.__nomor = input("Masukkan Nomer Kelas yang ingin dihapus: ")
 
         db = Connect()
+        criteria = {"NomerKelas": self.__nomor}
+        existing_data = db.get("kelas", criteria)
+
+        if not existing_data:
+            print("Nomer Kelas tidak ditemukan dalam database.")
+            return
+
         criteria = {"NomerKelas": self.__nomor}
         db.delete("kelas", criteria)
 
-    def classroom_exists(self):
-        db = Connect()
-        criteria = {"NomerKelas": self.__nomor}
-        result = db.select("kelas", criteria)
-        return bool(result)  # Returns True if the classroom exists, False otherwise
-
-    @staticmethod
-    def select_from_database():
+    def select_kelas(self):
         db = Connect()
         result = db.select("kelas")
         return result
@@ -67,21 +100,21 @@ class Kelas:
 # Create a Kelas object
 kelas = Kelas()
 
-print("Choose an operation:")
-print("1. Insert")
-print("2. Update")
-print("3. Delete")
-print("4. Select")
-operation = int(input("Enter the operation number: "))
+print("Sila Pilih Operasi:")
+print("1. Masukkan Kelas (Insert)")
+print("2. Membarui Kelas (Update)")
+print("3. Hapus Kelas (Delete)")
+print("4. Pilih Kelas (Select)")
+operation = int(input("Sila Pilih Nomer Operasi: "))
 
 if operation == 1:
-    kelas.insert_to_database()
+    kelas.insert_kelas()
 elif operation == 2:
-    kelas.update_in_database()
+    kelas.update_kelas()
 elif operation == 3:
-    kelas.delete_from_database()
+    kelas.delete_kelas()
 elif operation == 4:
-    result = Kelas.select_from_database()
+    result = kelas.select_kelas()
     print(result)
 else:
-    print("Invalid operation number.")
+    print("Tiada Nomer Operasi.")
