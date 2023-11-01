@@ -1,117 +1,62 @@
 import os
+import random
 from Database.Connect import Connect
 
 os.system("cls")
-CONN = Connect()
-ANSWER = []
 
 class Exam:
-    def __init__(self, timeLimit, subject):
-        self.question = []
-        self._timeLimit = timeLimit
-        self.__subject = subject
+    def __init__(self):
+        self.isAdmin = False
+        self.__mydb = Connect()
 
-    def get_question(self):
-        list_question = CONN.select("soal")
-        for data in list_question:
-            question = data["soal_ujian"]
-            self.question.append(question)
+        if self.isAdmin:
+            print("1. Insert session\n2. Update session\n3. Delete session")
+            isInput = int(input("Which method? fill number: "))
+            if isInput == 1:
+                self.session_token()
+                self.insert_session()
+            elif isInput == 2:
+                self.update_session()
+            elif isInput == 3:
+                self.delete_session()
+                
+        elif self.isAdmin == False:
+            self.get_session = self.__mydb.select("exam")
+            for data in self.get_session:
+                id = data["id"]
+                sess = data["session"]
+                print(f"{id}. {sess}")
 
-    def showSubject(self):
-        print(f"Subject's Test was {self.__subject}")
+            user_input = int(input("Input which session to do: "))
+            input_token = input("Input token to access the questions: ")
+            self.validate_token(input_token, user_input=user_input)
+                
+    def validate_token(self, token, user_input):
+        indicator_id = self.__mydb.first("exam", {"id": user_input}, ["token"])
+        if token == indicator_id["token"]:
+            print("You have accessed to the question")
+        else:
+            print("You failed to access the questions")
 
-    def start_exam(self, name):
-        print(f"{name}, You have {self._timeLimit} hour to do your exam!")
-        x = 0
-        for x in range(len(self.question)):
-            print(f"\n{x+1}. {self.question[x]}")
-            answer = input("Answer: ")
-            ANSWER.append(answer)
+    def session_token(self):
+        self.session = input("Input session: ")
+        self.token = ""
+        for x in range(5):
+            tokenn = str(random.randint(0,9))
+            self.token += tokenn
 
-    def submit_exam(self):
-        finishExam = input("Finish exam? type 'y' to finish: ")
-        print("Your final answer: ")
-        for x in range(len(ANSWER)):
-            print(f"{x+1}. {ANSWER[x]}")
-        
+    def insert_session(self):
+        self.__mydb.insert("exam", {"session": self.session, "token": self.token})
 
-    # for only professor accessed
-class Prof(Exam):
-    def score(self, name):
-        for x in range(len(ANSWER)):
-            print(f"{x+1}. {ANSWER[x]}")
+    def update_session(self):
+        print(self.__mydb.select("exam", ["id", "session", "token"]))
+        self.whichUpdated = input("which id want to be updated? ")
+        self.session_token()
+        self.__mydb.update("exam", {"id": self.whichUpdated}, {"session": self.session, "token": self.token})
+            
+    def delete_session(self):
+        print(self.__mydb.select("exam", ["id", "session", "token"]))
+        deleteSession = input("which id to delete? ")
+        self.__mydb.delete("exam", {"id": deleteSession})
 
-        score = int(input("Input score: "))
-        return f"{name}'s final score was {score}"
-    
-    def input_question(self):
-        still_input = True
-        while still_input:
-            isYes = input("Input question? ").lower()
-            if isYes == "y":
-                isInputting = input("Input question: \n")
-                CONN.insert("soal", {"soal_ujian": isInputting}) 
-            else:
-                still_input = False
-                # Expansion Auto Increment
-
-    def view_current_question(self):
-        list_question = CONN.select("soal")
-        for data in list_question:
-            no = data["nomor"]
-            question = data["soal_ujian"]
-            print(f"{no}. {question}")
-
-def running_program(name):
-    print("-"*50)
-    compsci.get_question()
-    compsci.showSubject()
-    compsci.start_exam(name)
-    compsci.submit_exam()
-
-
-name_saved = "Jeffrey"
-compsci = Exam(1, "Introduction to Computer Science 😄")
-while compsci:
-    status = input("Student or Prof? ").lower()
-    if status == "student":
-        isReady = input("Ready start exam? type 'ready' to start! ")
-        if isReady:
-            running_program(name=name_saved)
-        print("You have finished your exams! 💪")
-        compsci = False
-
-    elif status == "prof":
-        # in this case keyword to access prof is TIMB
-        validateProf = input("Validate if you're a prof: ").upper()
-        if validateProf == "TIMB":
-            prof = Prof(1, "Introduction to Computer Science 😄")
-            isDoing = input("Choose: \n - Score\n - Input questions\n - View questions\n --> ").lower()
-            if isDoing == "score":
-                print(prof.score(name_saved))
-            elif isDoing == "input questions":
-                prof.input_question()
-            else: 
-                prof.view_current_question()
-            compsci = False
-    else:
-        compsci = False
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Start exam
-# x = 0
-        # for x in range(len(self.question)):
-        #     print(f"\n{x+1}. {self.question[x]}")
-        #     answer = input("Answer: ")
-        #     CONN.__execute(f'CREATE TABLE `{name}` (nomor int, jawaban varchar(1000))', 1)
+Exam1 = Exam()
