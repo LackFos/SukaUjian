@@ -9,7 +9,7 @@ class LoginPage(CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        container = CTkFrame(self, fg_color='#2a2a2a')
+        container = CTkFrame(self, fg_color='white')
         container.grid(row=0, column=0)
         
         logoImage =  CTkImage(Image.open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'assets', 'logo-text.png')), size=(160, 40))
