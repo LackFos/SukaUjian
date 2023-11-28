@@ -4,6 +4,7 @@ from nilai import NilaiPage
 from soal import SoalPage
 from kelas import KelasPage
 from jadwal import JadwalPage
+from jawaban import JawabanPage
 from PIL import Image, ImageTk
 
 class HomePage(CTkFrame):
@@ -44,6 +45,10 @@ class HomePage(CTkFrame):
         t5.configure(height=48, font=("Poppins", 16, "bold"), anchor="w")
         t5.grid(row=5, column=0, padx=16, pady=(16,0), sticky="ew")
 
+        t6 = CTkButton(sidebar, text="Jawaban", command=lambda: self.navigateTo("jawaban"))
+        t6.configure(height=48, font=("Poppins", 16, "bold"), anchor="w")
+        t6.grid(row=6, column=0, padx=16, pady=(16,0), sticky="ew")
+
         content = CTkFrame(self, fg_color='white', corner_radius=8)
         content.grid(row=0, column=1, sticky="nsew", pady=8, padx=8)
         
@@ -52,7 +57,8 @@ class HomePage(CTkFrame):
             "nilai": NilaiPage(content),
             "kelas": KelasPage(content),
             "soal": SoalPage(content),
-            "jadwal": JadwalPage(content)
+            "jadwal": JadwalPage(content),
+            "jawaban": JawabanPage(content)
         }
         
         self.navigateTo("ujian")
