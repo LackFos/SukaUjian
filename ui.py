@@ -1,6 +1,8 @@
 import customtkinter as tk
 import tkinter
 from Dosen import *
+import datetime
+import os
 
 tk.set_appearance_mode("dark")
 tk.set_default_color_theme("blue")
@@ -8,7 +10,9 @@ tk.set_default_color_theme("blue")
 app=tk.CTk()
 app.geometry("600x600")
 
-
+def refresh():
+    app.destroy()
+    os.system('C:/Users/asus/AppData/Local/Programs/Python/Python310/python.exe c:/Users/asus/Documents/GitHub/SukaUjian/ui.py')
 
 tabView = tk.CTkTabview(app)
 tabView.configure(width=500)
@@ -20,12 +24,15 @@ tabView.add("Delete Jadwal")
 
 def BuatJadwal():
     dosen.ExamSchedule(TambahTime.get(),TambahDate.get())
+    refresh()
 
 def UpdateJadwal():
     dosen.ExamSchedule(Updateid.get(),UpdateTime.get(),UpdateDate.get())
+    refresh()
 
 def DeleteJadwal():
     dosen.DeleteExam(Deleteid.get())
+    refresh()
 
 
 #Tab Tambah Jadwal
